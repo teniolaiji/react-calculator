@@ -39,7 +39,55 @@ function reducer(state, { type, payload }) {
         operation: payload.operation,
         currentOperation: null,
       };
+    case ACTIONS.CHOOSE_OPERATION:
+      if (state.currentOperation == null && state.previousOperation == null) {
+        return state;
+      }
+      if (state.previousOperation == null) {
+        return {
+          ...state,
+          operation: payload.operation,
+          previousOperation: state.currentOperation,
+          currentOperation: null,
+        };
+      }
+      return {
+        ...state,
+        previousOperation: evaluate(state),
+        operation: payload.operation,
+        currentOperation: null,
+      };
+      return {
+        ...state,
+        previousOperation: evaluate(state),
+        operation: payload.operation,
+        currentOperation: null,
+      };
+    case ACTIONS.CLEAR:
+      return {};
   }
+}
+
+function evaluate({ currentOperation, previousOperation, operation }) {
+  const prev = parseFloat(previousOperation);
+  const current = parseFloat(currentOperation);
+  if (isNaN(prev) || isNaN(current)) return "";
+  let result = "";
+  switch (operation) {
+    case "+":
+      result = prev + current;
+      break;
+    case "-":
+      result = prev - current;
+      break;
+    case "*":
+      result = prev * current;
+      break;
+    case "/":
+      result = prev / current;
+      break;
+  }
+  return result.toString();
 }
 
 function App() {
@@ -63,7 +111,7 @@ function App() {
 
         <button
           className="col-span-2 bg-gray-100"
-          // onClick={() => dispatch({ type: ACTIONS.CLEAR })}
+          onClick={() => dispatch({ type: ACTIONS.CLEAR })}
         >
           AC
         </button>
