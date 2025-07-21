@@ -1,22 +1,42 @@
 import { useReducer } from "react";
 import "./App.css";
-import ButtonDigit from "./Buttondigit";
-import ButtonOperation from "./Buttonoperation";
-
-export const actions = {
-  choose_digit: "choose_digit",
-  choose_operation: "choose_operation",
-  clear: "clear",
-  delete_digit: "delete_digit",
-  evaluate: "evaluate",
+import ButtonD from "./ButtonD";
+import ButtonO from "./ButtonO";
+const ACTIONS = {
+  CHOOSE_DIGIT: "choose_digit",
+  CHOOSE_OPERATION: "choose_operation",
+  CLEAR: "clear",
+  DELETE_DIGIT: "delete_digit",
+  EVALUATE: "evaluate",
 };
 
 function reducer(state, { type, payload }) {
   switch (type) {
-    case actions.choose_digit:
+    case ACTIONS.CHOOSE_DIGIT:
+      if (payload.digit === "0" && state.currentOperation === "0") return state;
+      if (payload.digit === "." && state.currentOperation.includes("."))
+        return state;
       return {
         ...state,
-        currentOperation: `${currentOperation || ""}${payload.digit}`,
+        currentOperation: `${state.currentOperation || ""}${payload.digit}`,
+      };
+    case ACTIONS.CHOOSE_OPERATION:
+      if (state.currentOperation == null && state.previousOperation == null) {
+        return state;
+      }
+      if (state.previousOperation == null) {
+        return {
+          ...state,
+          operation: payload.operation,
+          previousOperation: state.currentOperation,
+          currentOperation: null,
+        };
+      }
+      return {
+        ...state,
+        previousOperation: evaluate(state),
+        operation: payload.operation,
+        currentOperation: null,
       };
   }
 }
@@ -40,42 +60,31 @@ function App() {
           <div className="text-xl font-bold">{currentOperation}</div>
         </div>
 
-        <button className="col-span-2 bg-gray-100">AC</button>
+        <button
+          className="col-span-2 bg-gray-100"
+          // onClick={() => dispatch({ type: ACTIONS.CLEAR })}
+        >
+          AC
+        </button>
         <button className="bg-gray-100">DEL</button>
-        <ButtonOperation
-          className="bg-gray-100"
-          dispatch={dispatch}
-          operation="/"
-        />
+        <ButtonO className="bg-gray-100" dispatch={dispatch} operation="/" />
 
-        <ButtonDigit className="bg-gray-100" dispatch={dispatch} digit="1" />
-        <ButtonDigit className="bg-gray-100" dispatch={dispatch} digit="2" />
-        <ButtonDigit className="bg-gray-100" dispatch={dispatch} digit="3" />
-        <ButtonOperation
-          className="bg-gray-100"
-          dispatch={dispatch}
-          operation="*"
-        />
+        <ButtonD className="bg-gray-100" dispatch={dispatch} digit="1" />
+        <ButtonD className="bg-gray-100" dispatch={dispatch} digit="2" />
+        <ButtonD className="bg-gray-100" dispatch={dispatch} digit="3" />
+        <ButtonO className="bg-gray-100" dispatch={dispatch} operation="*" />
 
-        <ButtonDigit className="bg-gray-100" dispatch={dispatch} digit="4" />
-        <ButtonDigit className="bg-gray-100" dispatch={dispatch} digit="5" />
-        <ButtonDigit className="bg-gray-100" dispatch={dispatch} digit="6" />
-        <ButtonOperation
-          className="bg-gray-100"
-          dispatch={dispatch}
-          operation="-"
-        />
+        <ButtonD className="bg-gray-100" dispatch={dispatch} digit="4" />
+        <ButtonD className="bg-gray-100" dispatch={dispatch} digit="5" />
+        <ButtonD className="bg-gray-100" dispatch={dispatch} digit="6" />
+        <ButtonO className="bg-gray-100" dispatch={dispatch} operation="-" />
 
-        <ButtonDigit className="bg-gray-100" dispatch={dispatch} digit="7" />
-        <ButtonDigit className="bg-gray-100" dispatch={dispatch} digit="8" />
-        <ButtonDigit className="bg-gray-100" dispatch={dispatch} digit="9" />
-        <ButtonOperation
-          className="bg-gray-100"
-          dispatch={dispatch}
-          operation="+"
-        />
-        <ButtonDigit className="bg-gray-100" dispatch={dispatch} digit="." />
-        <ButtonDigit className="bg-gray-100" dispatch={dispatch} digit="0" />
+        <ButtonD className="bg-gray-100" dispatch={dispatch} digit="7" />
+        <ButtonD className="bg-gray-100" dispatch={dispatch} digit="8" />
+        <ButtonD className="bg-gray-100" dispatch={dispatch} digit="9" />
+        <ButtonO className="bg-gray-100" dispatch={dispatch} operation="+" />
+        <ButtonD className="bg-gray-100" dispatch={dispatch} digit="." />
+        <ButtonD className="bg-gray-100" dispatch={dispatch} digit="0" />
         <button className="col-span-2 bg-gray-100">=</button>
       </div>
     </div>
