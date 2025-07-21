@@ -14,13 +14,6 @@ export const ACTIONS = {
 function reducer(state, { type, payload }) {
   switch (type) {
     case ACTIONS.CHOOSE_DIGIT:
-      if(state.overwrite){
-        return {
-          ...state,
-          currentOperation: payload.digit,
-          overwrite: false,
-        }
-      }
       if (payload.digit === "0" && state.currentOperation === "0") return state;
       if (payload.digit === "." && state.currentOperation.includes("."))
         return state;
@@ -36,12 +29,6 @@ function reducer(state, { type, payload }) {
         return {
           ...state,
           operation: payload.operation,
-        };
-      }
-      if (state.previousOperation == null) {
-        return {
-          ...state,
-          operation: payload.operation,
           previousOperation: state.currentOperation,
           currentOperation: null,
         };
@@ -52,26 +39,8 @@ function reducer(state, { type, payload }) {
         operation: payload.operation,
         currentOperation: null,
       };
-
     case ACTIONS.CLEAR:
       return {};
-    case ACTIONS.EVALUATE:
-      if (
-        state.operation == null ||
-        state.currentOperation == null ||
-        state.previousOperation == null
-      ) {
-        return state;
-      }
-      return {
-        ...state,
-        overwrite: true, 
-        previousOperation: null,
-        operation: null,
-        currentOperation: evaluate(state),
-      };
-      }
-    )
   }
 }
 
@@ -93,7 +62,6 @@ function evaluate({ currentOperation, previousOperation, operation }) {
     case "/":
       result = prev / current;
       break;
-
   }
   return result.toString();
 }
@@ -142,7 +110,7 @@ function App() {
         <ButtonO className="bg-gray-100" dispatch={dispatch} operation="+" />
         <ButtonD className="bg-gray-100" dispatch={dispatch} digit="." />
         <ButtonD className="bg-gray-100" dispatch={dispatch} digit="0" />
-        <button className="col-span-2 bg-gray-100" onClick={() => dispatch({ type: ACTIONS.EVALUATE })}>=</button>
+        <button className="col-span-2 bg-gray-100">=</button>
       </div>
     </div>
   );
