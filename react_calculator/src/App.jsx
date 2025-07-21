@@ -1,8 +1,9 @@
 import { useReducer } from "react";
 import "./App.css";
-import ButtonD from "./ButtonD";
-import ButtonO from "./ButtonO";
-const ACTIONS = {
+import ButtonD from "./ButtonD.jsx";
+import ButtonO from "./ButtonO.jsx";
+
+export const ACTIONS = {
   CHOOSE_DIGIT: "choose_digit",
   CHOOSE_OPERATION: "choose_operation",
   CLEAR: "clear",
@@ -45,7 +46,7 @@ function App() {
   const [{ currentOperation, previousOperation, operation }, dispatch] =
     useReducer(reducer, {});
   return (
-    <div className="min-h-screen flex items-start justify-center pt-60">
+    <div className="min-h-screen flex items-start justify-center pt-10">
       <div
         className="grid gap-1"
         style={{

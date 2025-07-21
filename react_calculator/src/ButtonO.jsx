@@ -1,5 +1,5 @@
 import { ACTIONS } from "./App";
-export default function ButtonOperation({ dispatch, operation }) {
+export default function ButtonO({ dispatch, operation }) {
   return (
     <button
       className="bg-gray-100 py-2 px-4 rounded"
