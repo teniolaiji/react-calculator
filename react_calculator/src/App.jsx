@@ -14,6 +14,13 @@ export const ACTIONS = {
 function reducer(state, { type, payload }) {
   switch (type) {
     case ACTIONS.CHOOSE_DIGIT:
+      if (state.overwrite) {
+        return {
+          ...state,
+          currentOperation: payload.digit,
+          overwrite: false,
+        };
+      }
       if (payload.digit === "0" && state.currentOperation === "0") return state;
       if (payload.digit === "." && state.currentOperation.includes("."))
         return state;
@@ -57,6 +64,7 @@ function reducer(state, { type, payload }) {
       }
       return {
         ...state,
+        overwrite: true,
         previousOperation: null,
         operation: null,
         currentOperation: evaluate(state),
