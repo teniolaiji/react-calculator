@@ -25,6 +25,12 @@ function reducer(state, { type, payload }) {
       if (state.currentOperation == null && state.previousOperation == null) {
         return state;
       }
+      if (state.currentOperation == null) {
+        return {
+          ...state,
+          operation: payload.operation,
+        };
+      }
       if (state.previousOperation == null) {
         return {
           ...state,
@@ -41,6 +47,20 @@ function reducer(state, { type, payload }) {
       };
     case ACTIONS.CLEAR:
       return {};
+    case ACTIONS.EVALUATE:
+      if (
+        state.operation == null ||
+        state.currentOperation == null ||
+        state.previousOperation == null
+      ) {
+        return state;
+      }
+      return {
+        ...state,
+        previousOperation: null,
+        operation: null,
+        currentOperation: evaluate(state),
+      };
   }
 }
 
@@ -110,7 +130,12 @@ function App() {
         <ButtonO className="bg-gray-100" dispatch={dispatch} operation="+" />
         <ButtonD className="bg-gray-100" dispatch={dispatch} digit="." />
         <ButtonD className="bg-gray-100" dispatch={dispatch} digit="0" />
-        <button className="col-span-2 bg-gray-100">=</button>
+        <button
+          className="col-span-2 bg-gray-100"
+          onClick={() => dispatch({ type: ACTIONS.EVALUATE })}
+        >
+          =
+        </button>
       </div>
     </div>
   );
